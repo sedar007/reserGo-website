@@ -12,21 +12,9 @@ export class AuthService {
         return response.data.data;
     }
 
-    async signUpGoogle(credential) {
-        try {
-            const response = await api.post(`${BASE_URL}/google`, credential, {
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-
     async signUp(request) {
         try {
-            const response = await api.post(`/administration/users`, request, {
+            const response = await api.post(`/customer/users`, request, {
                 withCredentials: true,
             });
             return response.data.data;
@@ -58,7 +46,8 @@ export class AuthService {
         try {
             await api.get(`${BASE_URL}/me`);
             return true;
-        } catch {
+        } catch (error){
+            console.error('User is not authenticated', error);
             return false;
         }
     }

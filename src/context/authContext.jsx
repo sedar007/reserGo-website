@@ -1,13 +1,14 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import { AuthService } from '../services/authServices.jsx';
-import { UserServices } from '../services/userServices.jsx';
-import { googleLogout } from '@react-oauth/google';
+import {UserServices} from "../services/userServices.js";
+import api from "../services/api.js";
 
 export const AuthContext = createContext(undefined);
 
 const AuthProvider = ({ children }) => {
     const authService = new AuthService();
     const [username, setUsername] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [profilePicture, setProfilePicture] = useState(null);
 
     useEffect(() => {
@@ -23,17 +24,20 @@ const AuthProvider = ({ children }) => {
             const userServices = new UserServices();
             const url = await userServices.getUserProfilePicture();
             setProfilePicture(url);
-        } catch (error) {
-            console.error("Erreur lors de la connexion", error);
+            setIsAuthenticated(true);
+        } catch {
+            setUsername(null);
+            setProfilePicture(null);
+            setIsAuthenticated(false);
         }
     };
 
     const logoutUser = async () => {
         try {
-            googleLogout();
             await authService.signOut();
             setUsername(null);
             setProfilePicture(null);
+            setIsAuthenticated(false);
         } catch (error) {
             console.error("Erreur lors de la déconnexion", error);
         }
@@ -41,25 +45,15 @@ const AuthProvider = ({ children }) => {
 
     const signUp = async (request) => {
         try {
+            console.log("Envoi de la requête d'inscription", request);
             await authService.signUp(request);
         } catch (error) {
+
             console.error("Erreur lors de l'inscription", error);
+            throw error;
         }
     };
 
-    const signUpGoogle = async (credential) => {
-        try {
-            const response = await authService.signUpGoogle(credential);
-            if (!response) return;
-
-            setUsername(response.username);
-            const userServices = new UserServices();
-            const url = await userServices.getUserProfilePicture();
-            setProfilePicture(url);
-        } catch (error) {
-            console.error("Erreur lors de l'inscription via Google", error);
-        }
-    };
 
     const checkAuthStatus = async () => {
         try {
@@ -69,13 +63,16 @@ const AuthProvider = ({ children }) => {
                 const userServices = new UserServices();
                 const url = await userServices.getUserProfilePicture();
                 setProfilePicture(url);
+                setIsAuthenticated(true);
             }
         } catch (error) {
             setUsername(null);
             setProfilePicture(null);
+            setIsAuthenticated(false);
             console.error("L'utilisateur n'est pas authentifié", error);
         }
     };
+
 
     const contextValue = useMemo(
         () => ({
@@ -84,9 +81,9 @@ const AuthProvider = ({ children }) => {
             loginUser,
             logoutUser,
             signUp,
-            signUpGoogle,
+            isAuthenticated
         }),
-        [username, profilePicture]
+        [username, profilePicture, isAuthenticated]
     );
 
     return (

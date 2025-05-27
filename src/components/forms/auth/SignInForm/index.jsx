@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 import logo from '../../../../assets/logo-transparent.png';
 import { Eye, EyeOff } from 'lucide-react';
 import { Switch } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
+import {AuthContext} from "../../../../context/authContext.jsx";
 
-const SignInForm = ({ auth }) => {
+const SignInForm = () => {
+    const auth = useContext(AuthContext);
+    const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const [login, setLogin] = useState('');
@@ -14,23 +18,25 @@ const SignInForm = ({ auth }) => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        if (auth?.username) {
+            navigate('/');
+        }
+    }, [navigate, auth]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (auth) {
             setLoading(true);
             try {
-                const res = await auth.loginUser(login, password);
+                await auth.loginUser(login, password);
                 setError(null);
                 navigate('/');
             } catch (err) {
-                console.error('Erreur de connexion :', err);
                 setError('Identifiants incorrects');
             } finally {
                 setLoading(false);
             }
-        }
     };
 
     return (
@@ -54,13 +60,13 @@ const SignInForm = ({ auth }) => {
 
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-[#3f170e]">
-                            Adresse email
+                            Adresse email ou nom d'utilisateur
                         </label>
                         <div className="mt-2">
                             <input
                                 id="email"
                                 name="email"
-                                type="email"
+                                type="text"
                                 required
                                 autoComplete="email"
                                 placeholder="example@mail.com"

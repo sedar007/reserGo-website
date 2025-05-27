@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import {useContext, useState} from 'react'
 import {
     Dialog,
     DialogPanel,
@@ -23,6 +23,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import logo from '../../../assets/logo-with-text.svg'
+import {AuthContext} from "../../../context/authContext.jsx";
+import UserDropdown from "./UserDropdown.jsx";
 
 const products = [
     { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -37,6 +39,7 @@ const callsToAction = [
 ]
 
 export default function Header() {
+    const auth = useContext(AuthContext);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
@@ -118,9 +121,13 @@ export default function Header() {
                     </a>
                 </PopoverGroup>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a href="/sign-in" className="text-sm/6 font-semibold text-gray-900">
-                        Log in <span aria-hidden="true">&rarr;</span>
-                    </a>
+                    {auth?.isAuthenticated ? (
+                            <UserDropdown />
+                    ) : (
+                        <a href="/sign-in" className="text-sm/6 font-semibold text-gray-900">
+                            Log in <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    )}
                 </div>
             </nav>
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
