@@ -4,12 +4,19 @@ const BASE_URL = '/auth';
 
 export class AuthService {
     async signIn(login, password) {
-        const response = await api.post(
-            `${BASE_URL}/login`,
-            { login, password },
-            { withCredentials: true }
-        );
-        return response.data.data;
+        try{
+            const response = await api.post(
+                `${BASE_URL}/login`,
+                { login, password },
+                { withCredentials: true }
+            );
+            return response.data.data;
+        }
+        catch (error) {
+            console.error('Error during sign-up', error);
+            throw error;
+        }
+
     }
 
     async signUp(request) {

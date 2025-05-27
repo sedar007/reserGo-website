@@ -24,10 +24,11 @@ const AuthProvider = ({ children }) => {
             const url = await userServices.getUserProfilePicture();
             setProfilePicture(url);
             setIsAuthenticated(true);
-        } catch {
+        } catch(error) {
             setUsername(null);
             setProfilePicture(null);
             setIsAuthenticated(false);
+            throw error;
         }
     };
 
