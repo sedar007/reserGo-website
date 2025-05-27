@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import { AuthService } from '../services/authServices.jsx';
 import {UserServices} from "../services/userServices.js";
-import api from "../services/api.js";
 
 export const AuthContext = createContext(undefined);
 

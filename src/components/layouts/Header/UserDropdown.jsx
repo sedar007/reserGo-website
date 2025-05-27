@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import { DropdownItem } from '../../ui/dropdown/DropdownItem.jsx';
 import { Dropdown } from '../../ui/dropdown/Dropdown.tsx';
-//import SignOutComponent from "../../auth/signOutComponent.tsx";
 import {AuthContext} from "../../../context/authContext.jsx";
 import SignOutComponent from "../../SignOutComponent/index.jsx";
 
