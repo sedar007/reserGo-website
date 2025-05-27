@@ -22,7 +22,7 @@ export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-        if (auth?.username) {
+        if (auth?.isAuthenticated || auth?.username) {
             navigate('/');
         }
     }, [navigate, auth]);
@@ -46,8 +46,9 @@ export default function SignIn() {
                 };
 
                 await auth.signUp(signUpRequest);
+                await auth.loginUser(username, password);
                 setError(null);
-                navigate('/signin');
+                navigate('/');
             } catch (err) {
                 if (err.response?.status === 400) setError(err.response?.data);
             } finally {

@@ -19,7 +19,7 @@ const SignInForm = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (auth?.username) {
+        if (auth?.username ) {
             navigate('/');
         }
     }, [navigate, auth]);
