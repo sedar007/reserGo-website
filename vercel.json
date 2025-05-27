@@ -1,0 +1,23 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "access-control-allow-origin",
+          "value": "https://resergo.adjysedar.fr"
+        },
+        {
+          "key": "access-control-allow-credentials",
+          "value": "true"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
