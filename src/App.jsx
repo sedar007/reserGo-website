@@ -3,6 +3,8 @@ import Layout from "./components/layouts/layout.jsx";
 import Home from "./pages/Home/index.jsx";
 import SignIn from "./pages/Auth/signIn.jsx";
 import SignUp from "./pages/Auth/signUp.jsx";
+import Offers from "./pages/Offers/index.jsx";
+import ProductOfferView from "./pages/offer/product/view.jsx";
 
 export default function App() {
     return (
@@ -12,6 +14,8 @@ export default function App() {
             </Route>
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/:product/offers"  element={<Offers />} />
+            <Route path="/:product/offer/:id" element={<ProductOfferView />} />
             <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     );
