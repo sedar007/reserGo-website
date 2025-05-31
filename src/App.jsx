@@ -4,7 +4,7 @@ import Home from "./pages/Home/index.jsx";
 import SignIn from "./pages/Auth/signIn.jsx";
 import SignUp from "./pages/Auth/signUp.jsx";
 import Offers from "./pages/product/offers/index.jsx";
-import ProductOfferView from "./pages/offer/view.jsx";
+import ProductOfferView from "./pages/product/offer/view.jsx";
 import ProductOfferBook from "./pages/product/offer/book.jsx";
 
 export default function App() {

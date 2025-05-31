@@ -43,7 +43,7 @@ export default function Offers() {
             <Search />
             <Breadcrumb />
             <h1 className="text-xl font-bold mb-2">Résultats</h1>
-            <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } />
+            <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
         </>
     );
 }
