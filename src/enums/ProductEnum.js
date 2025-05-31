@@ -5,9 +5,9 @@ const ProductEnum = {
 };
 
 const productTypeToSlug = {
-    [ProductEnum.HOTEL]: 'hotel',
-    [ProductEnum.RESTAURANT]: 'restaurant',
-    [ProductEnum.EVENT]: 'event',
+    [ProductEnum.HOTEL]: 'hotels',
+    [ProductEnum.RESTAURANT]: 'restaurants',
+    [ProductEnum.EVENT]: 'events',
 };
 
 function getProductSlug(type) {

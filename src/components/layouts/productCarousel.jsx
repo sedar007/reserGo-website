@@ -1,39 +1,62 @@
 import { useRef, useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function ProductCarousel({ products }) {
+export default function ProductCarousel({ products, slug }) {
     const scrollRef = useRef();
     const navigate = useNavigate();
     const [atStart, setAtStart] = useState(true);
     const [atEnd, setAtEnd] = useState(false);
 
-    console.log(products)
-
     const updateArrows = () => {
         const el = scrollRef.current;
-        setAtStart(el.scrollLeft === 0);
-        setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+        if (!el) return;
+
+        const isAtStart = el.scrollLeft === 0;
+        const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+
+        setAtStart(isAtStart);
+        setAtEnd(isAtEnd);
     };
 
     const scrollLeft = () => {
-        scrollRef.current.scrollBy({ left: -400, behavior: "smooth" });
+        scrollRef.current?.scrollBy({ left: -400, behavior: "smooth" });
     };
 
     const scrollRight = () => {
-        scrollRef.current.scrollBy({ left: 400, behavior: "smooth" });
+        scrollRef.current?.scrollBy({ left: 400, behavior: "smooth" });
     };
 
     const handleViewDetails = (product, id) => {
         navigate(`/${product}/offer/${id}`);
     };
 
+    const handleBook = (product, id) => {
+        navigate(`/${product}/offer/book/${id}`);
+    };
+
     useEffect(() => {
         const el = scrollRef.current;
-        updateArrows();
+        if (!el) return;
+
+        const timeout = setTimeout(() => {
+            updateArrows();
+        }, 100);
 
         el.addEventListener("scroll", updateArrows);
-        return () => el.removeEventListener("scroll", updateArrows);
-    }, []);
+        return () => {
+            clearTimeout(timeout);
+            el.removeEventListener("scroll", updateArrows);
+        };
+    }, [products]);
+
+    if (!products || products.length === 0) {
+        return (
+            <div className="text-center py-20">
+                <h2 className="text-2xl font-semibold text-gray-700">Aucune offre trouvée</h2>
+                <p className="text-gray-500 mt-2">Essayez de modifier vos critères de recherche.</p>
+            </div>
+        );
+    }
 
     return (
         <div className="relative bg-white py-12 px-4 sm:px-6 lg:px-8 max-w-[90vw] mx-auto">
@@ -41,54 +64,11 @@ export default function ProductCarousel({ products }) {
                 Vos résultats de recherche
             </h2>
 
-            <div
-                ref={scrollRef}
-                className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
-            >
-                {products.map((product) => (
-                    <div
-                        key={product.id}
-                        className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
-                    >
-                        <img
-                            src={product.imageSrc}
-                            alt="Image de l'offre"
-                            className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
-                        />
-                        <div className="mt-4 flex justify-between">
-                            <div>
-                                <h3 className="text-base font-semibold text-gray-800">
-                                    {product.title}
-                                </h3>
-                                <p className="text-sm text-gray-500">{product.numberOfGuests}</p>
-                            </div>
-                            <p className="text-base font-bold text-gray-900">{product.numberOfGuests}</p>
-                        </div>
-                        <div className="mt-4 flex justify-between">
-                            <button
-                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                onClick={() => handleViewDetails('nomProduit', '52')}
-                            >
-                                Voir détail
-                            </button>
-
-                            <button
-                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                onClick={() => console.log(`Réserver ${product.title}`)}
-                            >
-                                Réserver
-                            </button>
-                        </div>
-                    </div>
-                ))}
-
-            </div>
-
             {/* Flèche gauche */}
             {!atStart && (
                 <button
                     onClick={scrollLeft}
-                    className="absolute top-1/2 left-3 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-3 rounded-full shadow-md backdrop-blur transition"
+                    className="absolute top-1/2 left-3 -translate-y-1/2 z-50 bg-white/90 hover:bg-white p-3 rounded-full shadow-md backdrop-blur transition"
                     aria-label="Voir les produits précédents"
                 >
                     <span className="text-2xl">←</span>
@@ -99,12 +79,55 @@ export default function ProductCarousel({ products }) {
             {!atEnd && (
                 <button
                     onClick={scrollRight}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-3 rounded-full shadow-md backdrop-blur transition"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 z-50 bg-white/90 hover:bg-white p-3 rounded-full shadow-md backdrop-blur transition"
                     aria-label="Voir plus de produits"
                 >
                     <span className="text-2xl">→</span>
                 </button>
             )}
+
+            <div
+                ref={scrollRef}
+                className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
+            >
+                {products.map((product, index) => (
+                    <div
+                        key={index}
+                        className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                    >
+                        <img
+                            src={product.data.imageSrc}
+                            alt="Image de l'offre"
+                            className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
+                        />
+                        <div className="mt-4 flex justify-between">
+                            <div>
+                                <h3 className="text-base font-semibold text-gray-800">
+                                    {product.data.hotelName}
+                                </h3>
+                                <p className="text-sm text-gray-500">{product.data.numberOfGuests} personne(s)</p>
+                            </div>
+                            <p className="text-base font-bold text-gray-900">
+                                {product.data.numberOfGuests} personne(s)
+                            </p>
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                onClick={() => handleViewDetails(slug, product.data.hotelId)}
+                            >
+                                Voir détail
+                            </button>
+                            <button
+                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                onClick={() => handleBook(slug, product.data.hotelId)}
+                            >
+                                Réserver
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import { ProductEnum, getProductSlug } from "../../../enums/ProductEnum.js";
-import {ProductService} from "../../../services/productService.js";
+import { ProductEnum, getProductSlug } from "../../enums/ProductEnum.js";
+import {ProductService} from "../../services/productService.js";
 import {useNavigate} from "react-router-dom";
 
 export default function Search() {
@@ -140,7 +140,7 @@ export default function Search() {
                     </>
                 )}
 
-                {product === ProductEnum.OCCASION && (
+                {product === ProductEnum.EVENT && (
                     <>
                         {/* Dates */}
                         <div className="flex flex-col">
