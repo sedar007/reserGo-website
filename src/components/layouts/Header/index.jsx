@@ -33,6 +33,7 @@ const products = [
     { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
     { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
 ]
+
 const callsToAction = [
     { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
     { name: 'Contact sales', href: '#', icon: PhoneIcon },
@@ -68,7 +69,7 @@ export default function Header() {
                 <PopoverGroup className="hidden lg:flex lg:gap-x-12">
                     <Popover className="relative">
                         <PopoverButton className="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
-                            Product
+                            Nos services
                             <ChevronDownIcon aria-hidden="true" className="size-5 flex-none text-gray-400" />
                         </PopoverButton>
 
@@ -111,7 +112,7 @@ export default function Header() {
                     </Popover>
 
                     <a href="#" className="text-sm/6 font-semibold text-gray-900">
-                        Features
+                        Mes réservations
                     </a>
                     <a href="#" className="text-sm/6 font-semibold text-gray-900">
                         Marketplace
@@ -125,7 +126,7 @@ export default function Header() {
                             <UserDropdown />
                     ) : (
                         <a href="/sign-in" className="text-sm/6 font-semibold text-gray-900">
-                            Log in <span aria-hidden="true">&rarr;</span>
+                            Se connecter <span aria-hidden="true">&rarr;</span>
                         </a>
                     )}
                 </div>
@@ -176,7 +177,7 @@ export default function Header() {
                                     href="#"
                                     className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                                 >
-                                    Features
+                                    Mes réservations
                                 </a>
                                 <a
                                     href="#"
@@ -197,7 +198,7 @@ export default function Header() {
                                     href="#"
                                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                                 >
-                                    Log in
+                                    Se connecter
                                 </a>
                             </div>
                         </div>

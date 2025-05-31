@@ -11,23 +11,16 @@ const BASE_URL = '/administration/offers';
 export class ProductService {
     async getAllOffers(slug, params) {
         try{
-            const url = `/administration/${slug}/search-availability?${params.toString()}`;
-            const response = await api.get(url);
-            return response.data;
-
-            /*if(product === ProductEnum.HOTEL) {
-                return HotelOfferFixture;
+            if(slug === "hotels") {
+                const url = `/administration/${slug}/search-availability?${params.toString()}`;
+                const response = await api.get(url);
+                return response.data;
             }
-            if(product === ProductEnum.RESTAURANT) {
-                return RestaurantOfferFixture;
+            if(slug === "restaurants") {
+                const url = `/customer/booking/${slug}/search-availability?${params.toString()}`;
+                const response = await api.get(url);
+                return response.data;
             }
-            if(product === ProductEnum.EVENT) {
-                return EventOfferFixture;
-            }
-
-            else {
-                return [...HotelOfferFixture, ...RestaurantOfferFixture, ...EventOfferFixture];
-            }*/
         }
         catch (error) {
             console.error('Error fetching product info', error);

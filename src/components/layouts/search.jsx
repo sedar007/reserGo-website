@@ -7,6 +7,7 @@ export default function Search() {
     const navigate = useNavigate();
     const [product, setProduct] = useState('');
     const [startDate, setStartDate] = useState('');
+    const [date, setDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [adults, setAdults] = useState(2);
     const [rooms, setRooms] = useState(1);
@@ -17,6 +18,7 @@ export default function Search() {
         if (saved) {
             if (saved.product) setProduct(saved.product);
             if (saved.startDate) setStartDate(saved.startDate);
+            if (saved.date) setDate(saved.date)
             if (saved.endDate) setEndDate(saved.endDate);
             if (saved.adults) setAdults(saved.adults);
             if (saved.rooms) setRooms(saved.rooms);
@@ -26,16 +28,37 @@ export default function Search() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {
-            product,
-            startDate,
-            endDate,
-            adults,
-            rooms,
-            ...(product === "Hôtel"),
-            ...(product === "Évènementiel"),
-            ...(product === "Restaurant" && { cuisine })
-        };
+
+        let data;
+        switch (product) {
+            case ProductEnum.HOTEL:
+                data = {
+                    product,
+                    adults,
+                    rooms,
+                    startDate,
+                    endDate
+                };
+                break;
+            case ProductEnum.RESTAURANT:
+                data = {
+                    product,
+                    adults,
+                    date,
+                    cuisine
+                };
+                break;
+            case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                data = {
+                    product,
+                    adults,
+                    startDate,
+                    endDate
+                };
+                break;
+            default:
+                break;
+        }
 
         localStorage.setItem("lastSearch", JSON.stringify(data));
         const slug = getProductSlug(product);
@@ -121,8 +144,8 @@ export default function Search() {
                             <input
                                 type="date"
                                 id="start-date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
                                 className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
                             />
                         </div>

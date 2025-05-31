@@ -4,7 +4,7 @@ import { ProductService } from "../../../services/productService.js";
 import Search from "../../../components/layouts/search.jsx";
 import Breadcrumb from "../../../components/layouts/breadcrumb.jsx";
 import ProductCarousel from "../../../components/layouts/productCarousel.jsx";
-import {getProductSlug} from "../../../enums/ProductEnum.js";
+import {getProductSlug, ProductEnum} from "../../../enums/ProductEnum.js";
 
 export default function Offers() {
     const { state } = useLocation();
@@ -17,13 +17,35 @@ export default function Offers() {
             try {
                 const productService = new ProductService();
                 const slug = getProductSlug(state?.product);
+                let params;
 
-                const params = new URLSearchParams({
-                    numberOfPeople: state?.adults,
-                    numberOfRooms: state?.rooms,
-                    arrivalDate: state?.startDate,
-                    returnDate: state?.endDate
-                });
+                switch (state?.product) {
+                    case ProductEnum.HOTEL:
+                        params = new URLSearchParams({
+                            numberOfPeople: state?.adults,
+                            numberOfRooms: state?.rooms,
+                            arrivalDate: state?.startDate,
+                            returnDate: state?.endDate
+                        });
+                        break;
+                    case ProductEnum.RESTAURANT:
+                        params = new URLSearchParams({
+                            numberOfGuests: state?.adults,
+                            date: state?.date,
+                            cuisineType: state?.cuisine
+                        });
+                        break
+                    case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                        params = new URLSearchParams({
+                            numberOfGuests: state?.adults,
+                            date: state?.endDate,
+                            arrivalDate: state?.startDate,
+                            returnDate: state?.endDate
+                        });
+                        break
+                    default:
+                        break;
+                }
 
                 const result = await productService.getAllOffers(slug, params);
                 setOffers(result);
