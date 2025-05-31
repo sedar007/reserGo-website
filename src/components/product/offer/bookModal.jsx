@@ -3,15 +3,12 @@
 import { Dialog, DialogBackdrop, DialogPanel, RadioGroup, Radio } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function BookModal({ open, onClose, product }) {
-    const [selectedColor, setSelectedColor] = useState(product.colors[0])
-    const [selectedSize, setSelectedSize] = useState(product.sizes[2])
 
     return (
         <Dialog open={open} onClose={() => {}} className="relative z-10">
@@ -54,66 +51,6 @@ export default function BookModal({ open, onClose, product }) {
                                         </div>
                                         <span className="ml-3 text-sm text-indigo-600">{product.reviewCount} reviews</span>
                                     </div>
-
-                                    <form className="mt-10">
-                                        {/* Couleurs */}
-                                        <fieldset>
-                                            <legend className="text-sm font-medium text-gray-900">Color</legend>
-                                            <RadioGroup
-                                                value={selectedColor}
-                                                onChange={setSelectedColor}
-                                                className="mt-4 flex items-center gap-x-3"
-                                            >
-                                                {product.colors.map((color) => (
-                                                    <Radio
-                                                        key={color.name}
-                                                        value={color}
-                                                        className={classNames(
-                                                            color.selectedClass,
-                                                            'relative flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none ring-2 ring-transparent data-checked:ring-gray-900'
-                                                        )}
-                                                    >
-                            <span
-                                className={classNames(color.class, 'h-8 w-8 rounded-full border border-black/10')}
-                            />
-                                                    </Radio>
-                                                ))}
-                                            </RadioGroup>
-                                        </fieldset>
-
-                                        {/* Tailles */}
-                                        <fieldset className="mt-6">
-                                            <legend className="text-sm font-medium text-gray-900">Size</legend>
-                                            <RadioGroup
-                                                value={selectedSize}
-                                                onChange={setSelectedSize}
-                                                className="mt-4 grid grid-cols-4 gap-4"
-                                            >
-                                                {product.sizes.map((size) => (
-                                                    <Radio
-                                                        key={size.name}
-                                                        value={size}
-                                                        disabled={!size.inStock}
-                                                        className={classNames(
-                                                            size.inStock
-                                                                ? 'bg-white text-gray-900 shadow-sm cursor-pointer'
-                                                                : 'bg-gray-50 text-gray-200 cursor-not-allowed',
-                                                            'group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50'
-                                                        )}
-                                                    >
-                                                        <span>{size.name}</span>
-                                                    </Radio>
-                                                ))}
-                                            </RadioGroup>
-                                        </fieldset>
-
-                                        <button
-                                            type="submit"
-                                            className="mt-6 w-full rounded-md bg-indigo-600 px-8 py-3 text-white hover:bg-indigo-700"
-                                        >
-                                            Add to bag
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
                         </div>

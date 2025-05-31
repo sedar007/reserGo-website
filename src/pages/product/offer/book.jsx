@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { RadioGroup, Radio } from '@headlessui/react'
 import { CreditCardIcon, BanknotesIcon, StarIcon } from '@heroicons/react/24/solid'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { generateFakeCardDetails, generateFakePaypalDetails } from "../../../utils/faker/paymentFaker.js";
 import logoVisa from "../../../assets/visa.svg";
 import logoPaypal from "../../../assets/paypal.svg"
@@ -9,6 +9,9 @@ import logoAmex from "../../../assets/amex.svg";
 import logoMasterCard from "../../../assets/mastercard.svg";
 import logoMir from "../../../assets/mir.svg";
 import {generateRating} from "../../../utils/faker/ratingFaker.js";
+import ConfirmationModal from "../../../components/modals/confirmationModal.jsx";
+import {ProductService} from "../../../services/productService.js";
+import {getProductSlug} from "../../../enums/ProductEnum.js";
 
 const paymentMethods = [
     { name: 'Carte bancaire', value: 'card', icon: CreditCardIcon },
@@ -19,25 +22,58 @@ export default function ProductOfferBook() {
     const [selectedMethod, setSelectedMethod] = useState(paymentMethods[0].value)
     const [fakeCard, setFakeCard] = useState(generateFakeCardDetails())
     const [fakePaypal, setFakePaypal] = useState(generateFakePaypalDetails())
-    const randomRating= generateRating();
+    const randomRating = generateRating();
     const { state } = useLocation();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [paymentSuccess, setPaymentSuccess] = useState(false);
+    const navigate = useNavigate();
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         if (selectedMethod === 'card') {
-            setFakeCard(generateFakeCardDetails())
+            setFakeCard(generateFakeCardDetails());
         } else if (selectedMethod === 'paypal') {
-            setFakePaypal(generateFakePaypalDetails())
+            setFakePaypal(generateFakePaypalDetails());
         }
-    }, [selectedMethod])
+    }, [selectedMethod]);
+
+    const handleConfirmPayment = async () => {
+        setPaymentSuccess(true);
+        closeModal();
+        try {
+            const productService = new ProductService();
+            const slug = state.slug;
+            const params = {
+                roomId: state.data.roomId,
+                hotelId: state.data.hotelId,
+                startDate: state.startDate,
+                endDate: state.endDate,
+                numberOfGuests: state.data.numberOfGuests,
+                isConfirmed: true,
+                createdAt: new Date().toISOString()
+            };
+
+            console.log(await productService.createBooking(slug, params));
+
+        } catch (err) {
+            console.error('Error while fetching data', err);
+        }
+        setTimeout(() => {
+            navigate("/");
+        }, 1000);
+    };
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        alert(
-            selectedMethod === 'card'
-                ? `Paiement fictif par carte effectué :\n${fakeCard.cardNumber} (${fakeCard.cardHolder})`
-                : `Paiement fictif via PayPal simulé :\nEmail: ${fakePaypal.email}\nTransaction: ${fakePaypal.transactionId}`
-        )
-    }
+        e.preventDefault();
+        openModal();
+    };
 
     const getTotalToPay = (startDate, endDate, pricePerNightPerPerson, numberOfGuests) => {
         const start = new Date(startDate);
@@ -45,7 +81,7 @@ export default function ProductOfferBook() {
         const differenceInMillis = end - start;
         const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
         return differenceInDays * pricePerNightPerPerson * numberOfGuests;
-    }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -103,22 +139,22 @@ export default function ProductOfferBook() {
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">
-                                            Numéro de carte
+                                            Nom du titulaire
                                         </label>
                                         <input
                                             type="text"
-                                            value={fakeCard.cardNumber}
+                                            value={fakeCard.cardHolder}
                                             readOnly
                                             className="mt-1 block w-3/4 rounded-md border-gray-300 shadow-sm"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">
-                                            Nom du titulaire
+                                            Numéro de carte
                                         </label>
                                         <input
                                             type="text"
-                                            value={fakeCard.cardHolder}
+                                            value={fakeCard.cardNumber}
                                             readOnly
                                             className="mt-1 block w-3/4 rounded-md border-gray-300 shadow-sm"
                                         />
@@ -191,11 +227,24 @@ export default function ProductOfferBook() {
 
                         <button
                             type="submit"
+                            onClick={openModal}
                             className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 font-medium"
                         >
-                            Total = {getTotalToPay(state.startDate, state.endDate, state.data.pricePerNightPerPerson, state.data.numberOfGuests)} €, confirmer et payer
+                            Payer au total {getTotalToPay(state.startDate, state.endDate, state.data.pricePerNightPerPerson, state.data.numberOfGuests)} €
                         </button>
                     </form>
+                    <ConfirmationModal
+                        isOpen={isModalOpen}
+                        closeModal={closeModal}
+                        title="Confirmation de paiement"
+                        message="Êtes-vous sûr de vouloir effectuer cette transaction ? Cette action est irréversible"
+                        onConfirm={handleConfirmPayment}
+                    />
+                    {paymentSuccess && (
+                        <div className="mt-4 text-green-600 font-bold">
+                            Paiement effectué avec succès ! Redirection vers la page d'accueil...
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

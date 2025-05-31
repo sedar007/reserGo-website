@@ -31,8 +31,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
     };
 
     const handleBook = (product, id, data, startDate, endDate) => {
-        console.log(startDate, endDate)
-        navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate } });
+        navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug } });
     };
 
     useEffect(() => {

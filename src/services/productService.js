@@ -35,28 +35,17 @@ export class ProductService {
         }
     }
 
-    async getById(product, id) {
-        try{
-            /*const response = await api.get(
-                `${BASE_URL}/${product}/login`);
-            return response.data.data;*/
-
-            if(product === ProductEnum.HOTEL) {
-                return HotelOfferFixture;
-            }
-            if(product === ProductEnum.RESTAURANT) {
-                return RestaurantOfferFixture;
-            }
-            if(product === ProductEnum.EVENT) {
-                return EventOfferFixture;
-            }
-
-            else {
-                return [...HotelOfferFixture, ...RestaurantOfferFixture, ...EventOfferFixture];
-            }
-        }
-        catch (error) {
-            console.error('Error fetching product info', error);
+    async createBooking(slug, params) {
+        try {
+            const url = `/customer/booking/${slug}`;
+            const response = await api.post(url, params, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error creating booking', error);
             throw error;
         }
     }
