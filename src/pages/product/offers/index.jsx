@@ -63,11 +63,14 @@ export default function Offers() {
             <Search />
             <Breadcrumb />
             <h1 className="text-xl font-bold mb-2">Résultats</h1>
-            {state?.product === ProductEnum.HOTEL || state?.product === ProductEnum.EVENT && (
+            {state?.product === ProductEnum.HOTEL && (
                 <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
             )}
             {state?.product === ProductEnum.RESTAURANT && (
                 <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } date={state?.date}/>
+            )}
+            {state?.product === ProductEnum.EVENT && (
+                <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
             )}
         </>
     );
