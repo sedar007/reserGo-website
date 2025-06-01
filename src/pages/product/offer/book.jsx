@@ -11,7 +11,7 @@ import logoMir from "../../../assets/mir.svg";
 import {generateRating} from "../../../utils/faker/ratingFaker.js";
 import ConfirmationModal from "../../../components/modals/confirmationModal.jsx";
 import {ProductService} from "../../../services/productService.js";
-import {getProductSlug} from "../../../enums/ProductEnum.js";
+import {ProductEnum} from "../../../enums/ProductEnum.js";
 
 const paymentMethods = [
     { name: 'Carte bancaire', value: 'card', icon: CreditCardIcon },
@@ -27,6 +27,7 @@ export default function ProductOfferBook() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const navigate = useNavigate();
+    const slug = state.slug;
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -49,16 +50,27 @@ export default function ProductOfferBook() {
         closeModal();
         try {
             const productService = new ProductService();
-            const slug = state.slug;
-            const params = {
-                roomId: state.data.roomId,
-                hotelId: state.data.hotelId,
-                startDate: state.startDate,
-                endDate: state.endDate,
-                numberOfGuests: state.data.numberOfGuests,
-                isConfirmed: true,
-                createdAt: new Date().toISOString()
-            };
+            let params;
+
+            switch (slug) {
+                case "hotels":
+                    params = {
+                        roomId: state.data.roomId,
+                        hotelId: state.data.hotelId,
+                        startDate: state.startDate,
+                        endDate: state.endDate,
+                        numberOfGuests: state.data.numberOfGuests,
+                        isConfirmed: true,
+                        createdAt: new Date().toISOString()
+                    };
+                    break;
+                case ProductEnum.RESTAURANT: {/* TODO à changer une fois le ws terminé */}
+                    break
+                case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                    break
+                default:
+                    break;
+            }
 
             console.log(await productService.createBooking(slug, params));
 
@@ -75,12 +87,19 @@ export default function ProductOfferBook() {
         openModal();
     };
 
-    const getTotalToPay = (startDate, endDate, pricePerNightPerPerson, numberOfGuests) => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const differenceInMillis = end - start;
-        const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
-        return differenceInDays * pricePerNightPerPerson * numberOfGuests;
+    const getTotalToPay = () => {
+        switch (slug) {
+            case "hotels":
+                return (new Date(state.endDate) - new Date(state.startDate)) / (1000 * 60 * 60 * 24) * state.data.pricePerNightPerPerson * state.data.numberOfGuests;
+
+            case "restaurants":
+                return state.data.pricePerGuest * state.data.availableCapacity;
+
+            case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                break
+            default:
+                break;
+        }
     };
 
     return (
@@ -92,7 +111,7 @@ export default function ProductOfferBook() {
                     className="h-full w-full object-cover"
                 />
                 <div className="p-8">
-                    <h1 className="text-2xl font-bold text-gray-900">{state.data.hotelName}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">{state.data.hotelName ?? state.data.restaurantName }</h1> {/* TODO à changer une fois le ws terminé */}
 
                     {/* Étoiles */}
                     <div className="flex items-center mt-1">
@@ -106,10 +125,19 @@ export default function ProductOfferBook() {
                         <span className="ml-2 text-sm text-gray-500">({randomRating} / 5)</span>
                     </div>
 
-                    <p className="mt-2 text-gray-600">{state.data.roomName} | {state.data.numberOfGuests} personne(s)</p>
-                    <p className="mt-4 text-2xl text-indigo-600 font-semibold">
-                        {state.data.pricePerNightPerPerson} € / nuit / personne
-                    </p>
+                    <p className="mt-2 text-gray-600">{state.data.roomName ?? state.data.typeOfCuisine} | {state.data.numberOfGuests ?? state.data.availableCapacity} personne(s)</p>
+
+                    {slug === "hotels" && (
+                        <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                            {state.data.pricePerNightPerPerson} € / nuit / personne
+                        </p>
+                    )}
+
+                    {slug === "restaurants" && (
+                        <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                            {state.data.pricePerGuest} € / personne
+                        </p>
+                    )}
 
                     <form onSubmit={handleSubmit} className="mt-8 space-y-4">
                         <fieldset>
@@ -230,7 +258,7 @@ export default function ProductOfferBook() {
                             onClick={openModal}
                             className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 font-medium"
                         >
-                            Payer au total {getTotalToPay(state.startDate, state.endDate, state.data.pricePerNightPerPerson, state.data.numberOfGuests)} €
+                            Payer au total {getTotalToPay()} €
                         </button>
                     </form>
                     <ConfirmationModal

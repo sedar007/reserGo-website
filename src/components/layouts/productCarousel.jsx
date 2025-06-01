@@ -30,8 +30,19 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
         navigate(`/${product}/offer/${id}`);
     };
 
-    const handleBook = (product, id, data, startDate, endDate) => {
-        navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug } });
+    const handleBook = (product, id, data, startDate, endDate, date) => {
+        switch (product) {
+            case "hotels":
+                navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug } });
+                break;
+            case "restaurants":
+                navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug } });
+                break
+            case "events": {/* TODO à changer une fois le ws terminé */}
+                break
+            default:
+                break;
+        }
     };
 
     useEffect(() => {
@@ -86,48 +97,95 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                 </button>
             )}
 
-            <div
-                ref={scrollRef}
-                className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
-            >
-                {products.map((product, index) => (
-                    <div
-                        key={index}
-                        className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
-                    >
-                        <img
-                            src={product.data.imageSrc}
-                            alt="Image de l'offre"
-                            className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
-                        />
-                        <div className="mt-4 flex justify-between">
-                            <div>
-                                <h3 className="text-base font-semibold text-gray-800">
-                                    {product.data.hotelName}
-                                </h3>
-                                <p className="text-sm text-gray-500">maximum {product.data.numberOfGuests} personne(s)</p>
+            {slug === "hotels" && (
+                <div
+                    ref={scrollRef}
+                    className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
+                >
+                    {products.map((product, index) => (
+                        <div
+                            key={index}
+                            className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                        >
+                            <img
+                                src={product.data.imageSrc}
+                                alt="Image de l'offre"
+                                className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
+                            />
+                            <div className="mt-4 flex justify-between">
+                                <div>
+                                    <h3 className="text-base font-semibold text-gray-800">
+                                        {product.data.hotelName}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">maximum {product.data.numberOfGuests} personne(s)</p>
+                                </div>
+                                <p className="text-base font-bold text-gray-900">
+                                    maximum {product.data.numberOfGuests} personne(s)
+                                </p>
                             </div>
-                            <p className="text-base font-bold text-gray-900">
-                                maximum {product.data.numberOfGuests} personne(s)
-                            </p>
+                            <div className="mt-4 flex justify-between">
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleViewDetails(slug, product.data.hotelId)}
+                                >
+                                    Voir détail
+                                </button>
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleBook(slug, product.data.hotelId, product.data, startDate, endDate)}
+                                >
+                                    Réserver
+                                </button>
+                            </div>
                         </div>
-                        <div className="mt-4 flex justify-between">
-                            <button
-                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                onClick={() => handleViewDetails(slug, product.data.hotelId)}
-                            >
-                                Voir détail
-                            </button>
-                            <button
-                                className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                onClick={() => handleBook(slug, product.data.hotelId, product.data, startDate, endDate)}
-                            >
-                                Réserver
-                            </button>
+                    ))}
+                </div>
+            )}
+
+            {slug === "restaurants" && (
+                <div
+                    ref={scrollRef}
+                    className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
+                >
+                    {products.map((product, index) => (
+                        <div
+                            key={index}
+                            className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                        >
+                            <img
+                                src={product.data.imageSrc}
+                                alt="Image de l'offre"
+                                className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
+                            />
+                            <div className="mt-4 flex justify-between">
+                                <div>
+                                    <h3 className="text-base font-semibold text-gray-800">
+                                        {product.data.restaurantName}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">maximum {product.data.numberOfGuests} personne(s)</p>
+                                </div>
+                                <p className="text-base font-bold text-gray-900">
+                                    maximum {product.data.numberOfGuests} personne(s)
+                                </p>
+                            </div>
+                            <div className="mt-4 flex justify-between">
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleViewDetails(slug, product.data.restaurantOfferId)}
+                                >
+                                    Voir détail
+                                </button>
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleBook(slug, product.data.restaurantOfferId, product.data, startDate, endDate)}
+                                >
+                                    Réserver
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

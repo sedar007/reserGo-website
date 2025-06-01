@@ -48,6 +48,7 @@ export default function Offers() {
                 }
 
                 const result = await productService.getAllOffers(slug, params);
+                console.log(result)
                 setOffers(result);
             } catch (err) {
                 console.error('Error while fetching data', err);
@@ -65,7 +66,12 @@ export default function Offers() {
             <Search />
             <Breadcrumb />
             <h1 className="text-xl font-bold mb-2">Résultats</h1>
-            <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
+            {state?.product === ProductEnum.HOTEL && (
+                <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
+            )}
+            {state?.product === ProductEnum.RESTAURANT && (
+                <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } date={state?.date}/>
+            )}
         </>
     );
 }
