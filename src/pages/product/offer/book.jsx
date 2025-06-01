@@ -53,15 +53,14 @@ export default function ProductOfferBook() {
             let params;
 
             switch (slug) {
-                case "hotels":
+                case "hotels": {/* TODO à changer une fois le ws terminé */}
                     params = {
-                        roomId: state.data.roomId,
-                        hotelId: state.data.hotelId,
                         startDate: state.startDate,
                         endDate: state.endDate,
-                        numberOfGuests: state.data.numberOfGuests,
-                        isConfirmed: true,
-                        createdAt: new Date().toISOString()
+                        rooms: state.data.map((room) => ({
+                            roomId: room.id,
+                            numberOfGuests: room.quantity
+                        }))
                     };
                     break;
                 case ProductEnum.RESTAURANT: {/* TODO à changer une fois le ws terminé */}
@@ -106,12 +105,12 @@ export default function ProductOfferBook() {
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
                 <img
-                    src={state.data.imageSrc}
+                    src={ slug === "hotels" ? state.hotelData.imageSrc : state.data.imageSrc}
                     alt="Image indisponible"
                     className="h-full w-full object-cover"
                 />
                 <div className="p-8">
-                    <h1 className="text-2xl font-bold text-gray-900">{state.data.hotelName ?? state.data.restaurantName }</h1> {/* TODO à changer une fois le ws terminé */}
+                    <h1 className="text-2xl font-bold text-gray-900">{ slug === "hotels" ? state.hotelData.hotelName : state.data.restaurantName }</h1> {/* TODO à changer une fois le ws terminé */}
 
                     {/* Étoiles */}
                     <div className="flex items-center mt-1">
@@ -125,18 +124,22 @@ export default function ProductOfferBook() {
                         <span className="ml-2 text-sm text-gray-500">({randomRating} / 5)</span>
                     </div>
 
-                    <p className="mt-2 text-gray-600">{state.data.roomName ?? state.data.typeOfCuisine} | {state.data.numberOfGuests ?? state.data.availableCapacity} personne(s)</p>
-
-                    {slug === "hotels" && (
-                        <p className="mt-4 text-2xl text-indigo-600 font-semibold">
-                            {state.data.pricePerNightPerPerson} € / nuit / personne
-                        </p>
+                    {slug === "events" && (
+                        <>
+                            <p className="mt-2 text-gray-600">{state.data.numberOfGuests} personne(s)</p>
+                            <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                                {state.data.pricePerNightPerPerson} € / nuit / personne
+                            </p>
+                        </>
                     )}
 
                     {slug === "restaurants" && (
-                        <p className="mt-4 text-2xl text-indigo-600 font-semibold">
-                            {state.data.pricePerGuest} € / personne
-                        </p>
+                        <>
+                            <p className="mt-2 text-gray-600">{state.data.typeOfCuisine} | {state.data.availableCapacity} place(s) disponible(s)</p>
+                            <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                                {state.data.pricePerGuest} € / personne
+                            </p>
+                        </>
                     )}
 
                     <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -258,7 +261,7 @@ export default function ProductOfferBook() {
                             onClick={openModal}
                             className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 font-medium"
                         >
-                            Payer au total {getTotalToPay()} €
+                            Payer au total { slug === "hotels" ? state.total : getTotalToPay() } €
                         </button>
                     </form>
                     <ConfirmationModal

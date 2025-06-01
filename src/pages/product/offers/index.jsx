@@ -23,7 +23,6 @@ export default function Offers() {
                     case ProductEnum.HOTEL:
                         params = new URLSearchParams({
                             numberOfPeople: state?.adults,
-                            numberOfRooms: state?.rooms,
                             arrivalDate: state?.startDate,
                             returnDate: state?.endDate
                         });
@@ -48,7 +47,6 @@ export default function Offers() {
                 }
 
                 const result = await productService.getAllOffers(slug, params);
-                console.log(result)
                 setOffers(result);
             } catch (err) {
                 console.error('Error while fetching data', err);

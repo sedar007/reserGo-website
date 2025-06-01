@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ProductCarousel({ products, slug, startDate, endDate }) {
+export default function ProductCarousel({ products, slug, startDate, endDate, date}) {
     const scrollRef = useRef();
     const navigate = useNavigate();
     const [atStart, setAtStart] = useState(true);
     const [atEnd, setAtEnd] = useState(false);
+    const [numberOfGuests, setNumberOfGuests] = useState({});
 
     const updateArrows = () => {
         const el = scrollRef.current;
@@ -30,10 +31,10 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
         navigate(`/${product}/offer/${id}`);
     };
 
-    const handleBook = (product, id, data, startDate, endDate, date) => {
+    const handleBook = (product, id, data, startDate, endDate, date, image) => {
         switch (product) {
             case "hotels":
-                navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug } });
+                navigate(`/${product}/offer/rooms/${id}`, { state: { data, startDate, endDate, slug, image } });
                 break;
             case "restaurants":
                 navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug } });
@@ -117,11 +118,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                                     <h3 className="text-base font-semibold text-gray-800">
                                         {product.data.hotelName}
                                     </h3>
-                                    <p className="text-sm text-gray-500">maximum {product.data.numberOfGuests} personne(s)</p>
                                 </div>
-                                <p className="text-base font-bold text-gray-900">
-                                    maximum {product.data.numberOfGuests} personne(s)
-                                </p>
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <button
@@ -132,7 +129,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                                 </button>
                                 <button
                                     className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                    onClick={() => handleBook(slug, product.data.hotelId, product.data, startDate, endDate)}
+                                    onClick={() => handleBook(slug, product.data.hotelId, product.data, startDate, endDate, product.data.imageSrc)}
                                 >
                                     Réserver
                                 </button>
@@ -162,11 +159,26 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                                     <h3 className="text-base font-semibold text-gray-800">
                                         {product.data.restaurantName}
                                     </h3>
-                                    <p className="text-sm text-gray-500">maximum {product.data.numberOfGuests} personne(s)</p>
+                                    <p className="text-sm text-gray-500">{product.data.availableCapacity} place(s) disponible(s)</p>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={product.data.availableCapacity}
+                                        value={numberOfGuests[product.data.restaurantOfferId] || 1}
+                                        onChange={(e) =>
+                                            setNumberOfGuests((prev) => ({
+                                                ...prev,
+                                                [product.data.restaurantOfferId]: parseInt(e.target.value) || 1,
+                                            }))
+                                        }
+                                        className="w-24 mt-1 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                        required
+                                    />
                                 </div>
                                 <p className="text-base font-bold text-gray-900">
-                                    maximum {product.data.numberOfGuests} personne(s)
+                                     {product.data.pricePerGuest} € / personne
                                 </p>
+
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <button
@@ -177,7 +189,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                                 </button>
                                 <button
                                     className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                    onClick={() => handleBook(slug, product.data.restaurantOfferId, product.data, startDate, endDate)}
+                                    onClick={() => handleBook(slug, product.data.restaurantOfferId, product.data, null, null, date)}
                                 >
                                     Réserver
                                 </button>
@@ -186,6 +198,8 @@ export default function ProductCarousel({ products, slug, startDate, endDate }) 
                     ))}
                 </div>
             )}
+
+            {/* TODO à changer une fois le ws terminé */}
         </div>
     );
 }
