@@ -11,7 +11,6 @@ import logoMir from "../../../assets/mir.svg";
 import {generateRating} from "../../../utils/faker/ratingFaker.js";
 import ConfirmationModal from "../../../components/modals/confirmationModal.jsx";
 import {ProductService} from "../../../services/productService.js";
-import {ProductEnum} from "../../../enums/ProductEnum.js";
 
 const paymentMethods = [
     { name: 'Carte bancaire', value: 'card', icon: CreditCardIcon },
@@ -71,7 +70,14 @@ export default function ProductOfferBook() {
                         isConfirmed: true
                     }
                     break
-                case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                case "events":
+                    params = {
+                        eventOfferId: state.id,
+                        numberOfGuests: state.numberOfGuests,
+                        startDate: state.startDate,
+                        endDate: state.endDate,
+                        isConfirmed: true
+                    }
                     break
                 default:
                     break;
@@ -92,13 +98,17 @@ export default function ProductOfferBook() {
         openModal();
     };
 
+    const getNbDays = () => {
+        return  (new Date(state.endDate) - new Date(state.startDate)) / (1000 * 60 * 60 * 24);
+    };
+
     const getTotalToPay = () => {
         switch (slug) {
             case "restaurants":
                 return state.data.pricePerGuest * state.numberOfGuests;
 
-            case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
-                break
+            case "events":
+                return getNbDays() * state.data.pricePerDay;
             default:
                 break;
         }
@@ -113,7 +123,15 @@ export default function ProductOfferBook() {
                     className="h-full w-full object-cover"
                 />
                 <div className="p-8">
-                    <h1 className="text-2xl font-bold text-gray-900">{ slug === "hotels" ? state.hotelData.hotelName : state.data.restaurantName }</h1> {/* TODO à changer une fois le ws terminé */}
+                    {slug === "hotels" && (
+                        <h1 className="text-2xl font-bold text-gray-900">{ state.hotelData.hotelName }</h1>
+                    )}
+                    {slug === "restaurants" && (
+                        <h1 className="text-2xl font-bold text-gray-900">{ state.data.restaurantName }</h1>
+                    )}
+                    {slug === "events" && (
+                        <h1 className="text-2xl font-bold text-gray-900">{ state.data.eventName }</h1>
+                    )}
 
                     {/* Étoiles */}
                     <div className="flex items-center mt-1">
@@ -129,9 +147,10 @@ export default function ProductOfferBook() {
 
                     {slug === "events" && (
                         <>
-                            <p className="mt-2 text-gray-600">{state.data.numberOfGuests} personne(s)</p>
+                            <p className="mt-2 text-gray-600">{state.data.availableCapacity} place(s) disponible(s)</p>
+                            <p className="mt-2 text-gray-600">{state.numberOfGuests} place(s) choisie(s) pour {getNbDays()} jour(s) </p>
                             <p className="mt-4 text-2xl text-indigo-600 font-semibold">
-                                {state.data.pricePerNightPerPerson} € / nuit / personne
+                                {state.data.pricePerDay} € / jour
                             </p>
                         </>
                     )}

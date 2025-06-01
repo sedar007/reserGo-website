@@ -39,7 +39,8 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
             case "restaurants":
                 navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
                 break
-            case "events": {/* TODO à changer une fois le ws terminé */}
+            case "events":
+                navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
                 break
             default:
                 break;
@@ -185,7 +186,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                                 <p className="text-base font-bold text-gray-900">
                                      {product.data.pricePerGuest} € / personne
                                 </p>
-
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <button
@@ -206,7 +206,72 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                 </div>
             )}
 
-            {/* TODO à changer une fois le ws terminé */}
+            {slug === "events" && (
+                <div
+                    ref={scrollRef}
+                    className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4"
+                >
+                    {products.map((product, index) => (
+                        <div
+                            key={index}
+                            className="w-72 flex-shrink-0 group relative transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                        >
+                            <img
+                                src={product.data.imageSrc}
+                                alt="Image de l'offre"
+                                className="w-full h-60 rounded-xl object-cover bg-gray-200 group-hover:opacity-80"
+                            />
+                            <div className="mt-4 flex justify-between">
+                                <div>
+                                    <h3 className="text-base font-semibold text-gray-800">
+                                        {product.data.eventName}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">{product.data.availableCapacity} place(s) disponible(s)</p>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={product.data.availableCapacity}
+                                        step="1"
+                                        inputMode="numeric"
+                                        value={numberOfGuests[product.data.eventOfferId] || 1}
+                                        onChange={(e) => {
+                                            const rawValue = parseInt(e.target.value);
+                                            const min = 1;
+                                            const max = product.data.availableCapacity;
+                                            const value = isNaN(rawValue) ? min : Math.max(min, Math.min(rawValue, max));
+                                            setNumberOfGuests((prev) => ({
+                                                ...prev,
+                                                [product.data.eventOfferId]: value,
+                                            }));
+                                        }}
+                                        className="w-24 mt-1 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                        required
+                                    />
+
+                                </div>
+                                <p className="text-base font-bold text-gray-900">
+                                    {product.data.pricePerDay} € / jour
+                                </p>
+                            </div>
+                            <div className="mt-4 flex justify-between">
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleViewDetails(slug, product.data.eventOfferId)}
+                                >
+                                    Voir détail
+                                </button>
+                                <button
+                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
+                                    onClick={() => handleBook(slug, product.data.eventOfferId, product.data, startDate, endDate, product.data.imageSrc)}
+                                >
+                                    Réserver
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
         </div>
     );
 }

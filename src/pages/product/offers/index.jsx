@@ -34,12 +34,11 @@ export default function Offers() {
                             cuisineType: state?.cuisine
                         });
                         break
-                    case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
+                    case ProductEnum.EVENT:
                         params = new URLSearchParams({
                             numberOfGuests: state?.adults,
-                            date: state?.endDate,
-                            arrivalDate: state?.startDate,
-                            returnDate: state?.endDate
+                            startDate: state?.startDate,
+                            endDate: state?.endDate
                         });
                         break
                     default:
@@ -64,7 +63,7 @@ export default function Offers() {
             <Search />
             <Breadcrumb />
             <h1 className="text-xl font-bold mb-2">Résultats</h1>
-            {state?.product === ProductEnum.HOTEL && (
+            {state?.product === ProductEnum.HOTEL || state?.product === ProductEnum.EVENT && (
                 <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
             )}
             {state?.product === ProductEnum.RESTAURANT && (

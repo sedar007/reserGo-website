@@ -21,6 +21,11 @@ export class ProductService {
                 const response = await api.get(url);
                 return response.data;
             }
+            if(slug === "events") {
+                const url = `/customer/booking/${slug}/search-availability?${params.toString()}`;
+                const response = await api.get(url);
+                return response.data;
+            }
         }
         catch (error) {
             console.error('Error fetching product info', error);
