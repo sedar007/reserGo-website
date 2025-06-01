@@ -164,16 +164,23 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                                         type="number"
                                         min="1"
                                         max={product.data.availableCapacity}
+                                        step="1"
+                                        inputMode="numeric"
                                         value={numberOfGuests[product.data.restaurantOfferId] || 1}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
+                                            const rawValue = parseInt(e.target.value);
+                                            const min = 1;
+                                            const max = product.data.availableCapacity;
+                                            const value = isNaN(rawValue) ? min : Math.max(min, Math.min(rawValue, max));
                                             setNumberOfGuests((prev) => ({
                                                 ...prev,
-                                                [product.data.restaurantOfferId]: parseInt(e.target.value) || 1,
-                                            }))
-                                        }
+                                                [product.data.restaurantOfferId]: value,
+                                            }));
+                                        }}
                                         className="w-24 mt-1 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
                                         required
                                     />
+
                                 </div>
                                 <p className="text-base font-bold text-gray-900">
                                      {product.data.pricePerGuest} € / personne
