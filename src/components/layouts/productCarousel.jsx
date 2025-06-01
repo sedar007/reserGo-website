@@ -37,7 +37,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                 navigate(`/${product}/offer/rooms/${id}`, { state: { data, startDate, endDate, slug, image } });
                 break;
             case "restaurants":
-                navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug } });
+                navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
                 break
             case "events": {/* TODO à changer une fois le ws terminé */}
                 break

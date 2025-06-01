@@ -53,7 +53,7 @@ export default function ProductOfferBook() {
             let params;
 
             switch (slug) {
-                case "hotels": {/* TODO à changer une fois le ws terminé */}
+                case "hotels":
                     params = {
                         startDate: state.startDate,
                         endDate: state.endDate,
@@ -63,7 +63,13 @@ export default function ProductOfferBook() {
                         }))
                     };
                     break;
-                case ProductEnum.RESTAURANT: {/* TODO à changer une fois le ws terminé */}
+                case "restaurants":
+                    params = {
+                        restaurantOfferId: state.id,
+                        numberOfGuests: state.numberOfGuests,
+                        date: state.date,
+                        isConfirmed: true
+                    }
                     break
                 case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
                     break
@@ -88,11 +94,8 @@ export default function ProductOfferBook() {
 
     const getTotalToPay = () => {
         switch (slug) {
-            case "hotels":
-                return (new Date(state.endDate) - new Date(state.startDate)) / (1000 * 60 * 60 * 24) * state.data.pricePerNightPerPerson * state.data.numberOfGuests;
-
             case "restaurants":
-                return state.data.pricePerGuest * state.data.availableCapacity;
+                return state.data.pricePerGuest * state.numberOfGuests;
 
             case ProductEnum.EVENT: {/* TODO à changer une fois le ws terminé */}
                 break
@@ -136,6 +139,7 @@ export default function ProductOfferBook() {
                     {slug === "restaurants" && (
                         <>
                             <p className="mt-2 text-gray-600">{state.data.typeOfCuisine} | {state.data.availableCapacity} place(s) disponible(s)</p>
+                            <p className="mt-2 text-gray-600">{state.numberOfGuests} place(s) choisie(s)</p>
                             <p className="mt-4 text-2xl text-indigo-600 font-semibold">
                                 {state.data.pricePerGuest} € / personne
                             </p>
