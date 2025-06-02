@@ -13,7 +13,7 @@ export class AuthService {
             return response.data.data;
         }
         catch (error) {
-            console.error('Error during sign-up', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
 
@@ -26,7 +26,7 @@ export class AuthService {
             });
             return response.data.data;
         } catch (error) {
-            console.error('Error during sign-up', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }
@@ -35,7 +35,8 @@ export class AuthService {
         try {
             await api.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
         } catch (error) {
-            console.error('Error during sign-out', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
+            throw error;
         }
     }
 
@@ -44,7 +45,7 @@ export class AuthService {
             const response = await api.get(`${BASE_URL}/me`);
             return response.data.data;
         } catch (error) {
-            console.error('Error during getProtectedData', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw new Error('Accès refusé, veuillez vous reconnecter');
         }
     };
@@ -53,8 +54,7 @@ export class AuthService {
         try {
             await api.get(`${BASE_URL}/me`);
             return true;
-        } catch (error){
-            console.error('User is not authenticated', error);
+        } catch {
             return false;
         }
     }

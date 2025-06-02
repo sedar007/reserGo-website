@@ -4,7 +4,6 @@ import SignInForm from '../../components/forms/auth/SignInForm';
 
 const SignInPage = () => {
 
-
     return (
         <div>
             <SignInForm />

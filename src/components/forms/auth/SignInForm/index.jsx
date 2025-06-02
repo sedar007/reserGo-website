@@ -4,12 +4,13 @@ import {useContext, useEffect, useState} from 'react';
 import logo from '../../../../assets/logo-transparent.png';
 import { Eye, EyeOff } from 'lucide-react';
 import { Switch } from '@headlessui/react';
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {AuthContext} from "../../../../context/authContext.jsx";
 
 const SignInForm = () => {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [showPassword, setShowPassword] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
@@ -17,6 +18,8 @@ const SignInForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const from = location.from || "/";
 
     useEffect(() => {
         if (auth?.username ) {
@@ -31,7 +34,10 @@ const SignInForm = () => {
             try {
                 await auth.loginUser(login, password);
                 setError(null);
-                navigate('/');
+
+                console.log(from)
+                // navigate('/');
+                // navigate(from, { replace: true });
             } catch (err) {
                 setError('Identifiants incorrects');
             } finally {
