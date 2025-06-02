@@ -92,7 +92,6 @@ export default function ProductOfferBook() {
                 case "events":
                     params = {
                         eventOfferId: state.id,
-                        numberOfGuests: state.numberOfGuests,
                         startDate: state.startDate,
                         endDate: state.endDate,
                         isConfirmed: true
@@ -165,8 +164,7 @@ export default function ProductOfferBook() {
 
                     {slug === "events" && (
                         <>
-                            <p className="mt-2 text-gray-600">{state.data.availableCapacity} place(s) disponible(s)</p>
-                            <p className="mt-2 text-gray-600">{state.numberOfGuests} place(s) choisie(s) pour {getNbDays()} jour(s) </p>
+                            <p className="mt-2 text-gray-600">{state.data.availableCapacity} place(s) choisie(s) pour {getNbDays()} jour(s) </p>
                             <p className="mt-4 text-2xl text-indigo-600 font-semibold">
                                 {state.data.pricePerDay} € / jour
                             </p>

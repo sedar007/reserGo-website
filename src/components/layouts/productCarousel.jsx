@@ -36,7 +36,7 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                 navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
                 break
             case "events":
-                navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
+                navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug, id } });
                 break
             default:
                 break;
@@ -211,26 +211,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                                         {product.data.eventName}
                                     </h3>
                                     <p className="text-sm text-gray-500">{product.data.availableCapacity} place(s) disponible(s)</p>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        max={product.data.availableCapacity}
-                                        step="1"
-                                        inputMode="numeric"
-                                        value={numberOfGuests[product.data.eventOfferId] || 1}
-                                        onChange={(e) => {
-                                            const rawValue = parseInt(e.target.value);
-                                            const min = 1;
-                                            const max = product.data.availableCapacity;
-                                            const value = isNaN(rawValue) ? min : Math.max(min, Math.min(rawValue, max));
-                                            setNumberOfGuests((prev) => ({
-                                                ...prev,
-                                                [product.data.eventOfferId]: value,
-                                            }));
-                                        }}
-                                        className="w-24 mt-1 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
-                                        required
-                                    />
 
                                 </div>
                                 <p className="text-base font-bold text-gray-900">
