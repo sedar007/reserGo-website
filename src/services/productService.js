@@ -28,7 +28,7 @@ export class ProductService {
             }
         }
         catch (error) {
-            console.error('Error fetching product info', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }
@@ -43,7 +43,7 @@ export class ProductService {
             });
             return response.data;
         } catch (error) {
-            console.error('Error creating booking', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }
@@ -54,7 +54,7 @@ export class ProductService {
             const response = await api.get(url);
             return response.data;
         } catch (error) {
-            console.error('Error retrieving all bookings', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }

@@ -15,20 +15,18 @@ export default function MyBooking() {
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        if(auth.isAuthenticated) {
-            const fetchBookings = async () => {
-                setError(null);
-                try {
-                    const productService = new ProductService();
-                    const result = await productService.getAllBooking();
-                    setBookings(result);
-                } catch {
-                    setError("Une erreur est survenue.");
-                }
-            };
+        const fetchBookings = async () => {
+            setError(null);
+            try {
+                const productService = new ProductService();
+                const result = await productService.getAllBooking();
+                setBookings(result);
+            } catch {
+                setError("Une erreur est survenue.");
+            }
+        };
 
-            fetchBookings();
-        }
+        fetchBookings();
     }, []);
 
     if(!auth.isAuthenticated)
