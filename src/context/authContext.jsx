@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
     const [profilePicture, setProfilePicture] = useState(null);
 
     useEffect(() => {
-        checkAuthStatus();
+       checkAuthStatus();
     }, []);
 
     const loginUser = async (login, password) => {
@@ -39,17 +39,16 @@ const AuthProvider = ({ children }) => {
             setProfilePicture(null);
             setIsAuthenticated(false);
         } catch (error) {
-            console.error("Erreur lors de la déconnexion", error);
+            if(error.status === 500) throw new Error('Erreur serveur');
+            throw error;
         }
     };
 
     const signUp = async (request) => {
         try {
-            console.log("Envoi de la requête d'inscription", request);
             await authService.signUp(request);
         } catch (error) {
-
-            console.error("Erreur lors de l'inscription", error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     };
@@ -65,11 +64,10 @@ const AuthProvider = ({ children }) => {
                 setProfilePicture(url);
                 setIsAuthenticated(true);
             }
-        } catch (error) {
+        } catch {
             setUsername(null);
             setProfilePicture(null);
             setIsAuthenticated(false);
-            console.error("L'utilisateur n'est pas authentifié", error);
         }
     };
 

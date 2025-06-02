@@ -30,7 +30,7 @@ const posts = [
             role: "Gourmet passionné",
             href: "#",
             imageUrl:
-                "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f9?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
+                "https://media.istockphoto.com/id/1443562748/fr/photo/mignon-chat-gingembre.jpg?s=612x612&w=0&k=20&c=ygNVVnqLk9V8BWu4VQ0D21u7-daIyHUoyKlCcx3K1E8=",
         },
     },
     {
@@ -87,7 +87,7 @@ const Testimonials = () => (
                             <p className="mt-5 line-clamp-3 text-sm text-gray-600">{post.description}</p>
                         </div>
                         <div className="relative mt-8 flex items-center gap-x-4">
-                            <img src={post.author.imageUrl} alt="" className="size-10 rounded-full bg-gray-50" />
+                            <img src={post.author.imageUrl} alt="Image non disponible" className="size-10 rounded-full bg-gray-50" />
                             <div className="text-sm">
                                 <p className="font-semibold text-gray-900">
                                     <a href={post.author.href}>

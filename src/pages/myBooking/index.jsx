@@ -15,23 +15,37 @@ export default function MyBooking() {
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        const fetchBookings = async () => {
-            setError(null);
-            try {
-                const productService = new ProductService();
-                const result = await productService.getAllBooking();
-                setBookings(result);
-            } catch (err) {
-                console.error("Error while fetching data", err);
-                setError("Une erreur est survenue.");
-            }
-        };
+        if(auth.isAuthenticated) {
+            const fetchBookings = async () => {
+                setError(null);
+                try {
+                    const productService = new ProductService();
+                    const result = await productService.getAllBooking();
+                    setBookings(result);
+                } catch {
+                    setError("Une erreur est survenue.");
+                }
+            };
 
-        fetchBookings();
+            fetchBookings();
+        }
     }, []);
 
+    if(!auth.isAuthenticated)
+        return <div className="max-w-md mx-auto mt-10 p-5 bg-yellow-100 text-yellow-800 rounded-xl border border-yellow-300 flex items-start gap-3">
+            <LockClosedIcon className="w-6 h-6 mt-1" />
+            <p>Veuillez vous connecter pour voir les informations de vos réservations.</p>
+        </div>;
+
     if (error)
-        return <p className="text-red-500 text-center mt-10">{error}</p>;
+        return <div className="text-center py-20">
+            <h2 className="text-2xl font-semibold text-gray-700">
+                Une erreur est survenue ...
+            </h2>
+            <p className="text-gray-500 mt-2">
+                Veuillez contacter un administrateur.
+            </p>
+        </div>;
 
     if (!bookings || bookings.length === 0) {
         return (
@@ -48,7 +62,7 @@ export default function MyBooking() {
 
     return (
         <>
-            {auth?.isAuthenticated ? (
+            {auth?.isAuthenticated && (
                 <div className="max-w-4xl mx-auto mt-10 px-4">
                     <div className="flex items-center gap-3 mb-6">
                         <ClipboardDocumentCheckIcon className="w-6 h-6 text-blue-600" />
@@ -94,11 +108,6 @@ export default function MyBooking() {
                             </div>
                         ))}
                     </div>
-                </div>
-            ) : (
-                <div className="max-w-md mx-auto mt-10 p-5 bg-yellow-100 text-yellow-800 rounded-xl border border-yellow-300 flex items-start gap-3">
-                    <LockClosedIcon className="w-6 h-6 mt-1" />
-                    <p>Veuillez vous connecter pour voir les informations de vos réservations.</p>
                 </div>
             )}
         </>

@@ -8,7 +8,7 @@ import mariage2 from "../../../assets/products/mariage2.jpg";
 import {FadeInWhenVisible} from "../../../components/ui/fadeInWhenVisible.jsx";
 
 const Presentation = () => (
-    <div className="relative overflow-hidden bg-white">
+    <div className="relative overflow-hidden bg-white mt-10">
         <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
             <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
                 <div className="sm:max-w-lg">
