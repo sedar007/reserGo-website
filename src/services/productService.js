@@ -47,4 +47,15 @@ export class ProductService {
             throw error;
         }
     }
+
+    async getAllBooking() {
+        try {
+            const url = `/customer/booking/my-bookings`;
+            const response = await api.get(url);
+            return response.data;
+        } catch (error) {
+            console.error('Error retrieving all bookings', error);
+            throw error;
+        }
+    }
 }
