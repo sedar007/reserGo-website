@@ -8,9 +8,7 @@ export default function Home() {
     return (
         <>
             <Presentation />
-            <SectionDivider />
             <Products />
-            <SectionDivider />
             <Search />
             <SectionDivider />
             <Testimonials />

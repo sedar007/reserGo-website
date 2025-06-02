@@ -1,23 +1,56 @@
 const posts = [
     {
         id: 1,
-        title: 'Boost your conversion rate',
-        href: '#',
+        title: "Un week-end parfait à Lyon !",
+        href: "#",
         description:
-            'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde.',
-        date: 'Mar 16, 2020',
-        datetime: '2020-03-16',
-        category: { title: 'Marketing', href: '#' },
+            "Hôtel confortable, personnel très accueillant et petit déjeuner délicieux. L'emplacement est idéal pour visiter la ville à pied.",
+        date: "Mai 28, 2025",
+        datetime: "2025-05-28",
+        category: { title: "Hôtel", href: "#" },
         author: {
-            name: 'Michael Foster',
-            role: 'Co-Founder / CTO',
-            href: '#',
+            name: "Sophie Lambert",
+            role: "Cliente fidèle",
+            href: "#",
             imageUrl:
-                'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80",
         },
     },
-    // Tu peux ajouter plus de posts ici...
-]
+    {
+        id: 2,
+        title: "Une soirée gastronomique mémorable",
+        href: "#",
+        description:
+            "Nous avons réservé dans un restaurant italien via la plateforme, tout était parfait : service rapide, plats exquis et ambiance romantique.",
+        date: "Mai 12, 2025",
+        datetime: "2025-05-12",
+        category: { title: "Restaurant", href: "#" },
+        author: {
+            name: "Julien Mercier",
+            role: "Gourmet passionné",
+            href: "#",
+            imageUrl:
+                "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f9?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
+        },
+    },
+    {
+        id: 3,
+        title: "Une organisation sans faille",
+        href: "#",
+        description:
+            "J’ai réservé une salle pour un anniversaire. Tout s’est déroulé comme prévu. L’équipe était à l’écoute et super réactive. Je recommande !",
+        date: "Avr 22, 2025",
+        datetime: "2025-04-22",
+        category: { title: "Événementiel", href: "#" },
+        author: {
+            name: "Claire Dubois",
+            role: "Organisatrice d'événements",
+            href: "#",
+            imageUrl:
+                "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
+        },
+    },
+];
 
 const Testimonials = () => (
     <div className="bg-white py-24 sm:py-32">

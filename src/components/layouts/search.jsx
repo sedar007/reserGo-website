@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ProductEnum, getProductSlug } from "../../enums/ProductEnum.js";
-import { ProductService } from "../../services/productService.js";
 import { useNavigate } from "react-router-dom";
 
 export default function Search() {
@@ -18,7 +17,7 @@ export default function Search() {
         if (saved) {
             if (saved.product) setProduct(saved.product);
             if (saved.startDate) setStartDate(saved.startDate);
-            if (saved.date) setDate(saved.date)
+            if (saved.date) setDate(saved.date);
             if (saved.endDate) setEndDate(saved.endDate);
             if (saved.adults) setAdults(saved.adults);
             if (saved.cuisine) setCuisine(saved.cuisine);
@@ -27,7 +26,6 @@ export default function Search() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const errors = [];
 
         if (!product) {
@@ -40,16 +38,13 @@ export default function Search() {
 
         switch (product) {
             case ProductEnum.HOTEL:
+            case ProductEnum.EVENT:
                 if (!startDate) errors.push("La date d'arrivée est obligatoire.");
                 if (!endDate) errors.push("La date de départ est obligatoire.");
                 break;
             case ProductEnum.RESTAURANT:
                 if (!date) errors.push("La date est obligatoire.");
                 if (!cuisine) errors.push("Le type de cuisine est obligatoire.");
-                break;
-            case ProductEnum.EVENT:
-                if (!startDate) errors.push("La date d'arrivée est obligatoire.");
-                if (!endDate) errors.push("La date de départ est obligatoire.");
                 break;
             default:
                 break;
@@ -65,28 +60,11 @@ export default function Search() {
         let data;
         switch (product) {
             case ProductEnum.HOTEL:
-                data = {
-                    product,
-                    adults,
-                    startDate,
-                    endDate
-                };
+            case ProductEnum.EVENT:
+                data = { product, adults, startDate, endDate };
                 break;
             case ProductEnum.RESTAURANT:
-                data = {
-                    product,
-                    adults,
-                    date,
-                    cuisine
-                };
-                break;
-            case ProductEnum.EVENT:
-                data = {
-                    product,
-                    adults,
-                    startDate,
-                    endDate
-                };
+                data = { product, adults, date, cuisine };
                 break;
             default:
                 break;
@@ -101,17 +79,15 @@ export default function Search() {
         <>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-7xl mx-auto p-6 bg-white rounded-2xl shadow-md flex flex-wrap items-end gap-4 justify-center"
+                className="max-w-5xl mx-auto p-6 bg-white rounded-3xl shadow-xl flex items-center space-x-6"
             >
-                {/* Produits */}
-                <div className="flex flex-col">
-                    <label htmlFor="product" className="text-sm font-medium text-gray-700">Quel produit ?</label>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="product" className="text-sm font-medium text-gray-800">Produit</label>
                     <select
                         id="product"
                         value={product}
                         onChange={(e) => setProduct(e.target.value)}
-                        className="w-48 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
-                        required
+                        className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                     >
                         <option value="">Tous les produits</option>
                         {Object.values(ProductEnum).map((label) => (
@@ -120,40 +96,35 @@ export default function Search() {
                     </select>
                 </div>
 
-                {/* Personnes */}
-                <div className="flex flex-col">
-                    <label htmlFor="adults" className="text-sm font-medium text-gray-700">Nombre de personne(s)</label>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="adults" className="text-sm font-medium text-gray-800">Nombre de personnes</label>
                     <input
                         type="number"
                         min="1"
                         value={adults}
                         onChange={(e) => setAdults(parseInt(e.target.value))}
-                        className="w-24 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
-                        required
+                        className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                     />
                 </div>
 
                 {product === ProductEnum.HOTEL && (
                     <>
-                        {/* Dates */}
-                        <div className="flex flex-col">
-                            <label htmlFor="start-date" className="text-sm font-medium text-gray-700">Arrivée</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Arrivée</label>
                             <input
                                 type="date"
-                                id="start-date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="end-date" className="text-sm font-medium text-gray-700">Départ</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Départ</label>
                             <input
                                 type="date"
-                                id="end-date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
@@ -161,25 +132,23 @@ export default function Search() {
 
                 {product === ProductEnum.RESTAURANT && (
                     <>
-                        <div className="flex flex-col">
-                            <label htmlFor="date" className="text-sm font-medium text-gray-700">Date</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Date</label>
                             <input
                                 type="date"
-                                id="date"
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
-                                className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="cuisine" className="text-sm font-medium text-gray-700">Type de cuisine</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Type de cuisine</label>
                             <input
                                 type="text"
-                                id="cuisine"
+                                placeholder="Italienne, Française, etc."
                                 value={cuisine}
                                 onChange={(e) => setCuisine(e.target.value)}
-                                placeholder="Italienne, Française, etc."
-                                className="w-48 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
@@ -187,34 +156,31 @@ export default function Search() {
 
                 {product === ProductEnum.EVENT && (
                     <>
-                        {/* Dates */}
-                        <div className="flex flex-col">
-                            <label htmlFor="start-date" className="text-sm font-medium text-gray-700">Arrivée</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Début</label>
                             <input
                                 type="date"
-                                id="start-date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="end-date" className="text-sm font-medium text-gray-700">Départ</label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-800">Fin</label>
                             <input
                                 type="date"
-                                id="end-date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="w-40 rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 text-sm"
+                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
                 )}
 
-                <div className="flex">
+                <div className="flex flex-col justify-center mt-4">
                     <button
                         type="submit"
-                        className="h-10 px-6 mt-6 rounded-md bg-orange-600 text-white text-sm font-semibold shadow-sm hover:bg-orange-700 transition"
+                        className="w-full px-6 py-3 rounded-lg bg-[#d56a34] text-white font-semibold shadow-md hover:bg-[#c25d2f] transition"
                     >
                         Rechercher
                     </button>
@@ -222,7 +188,7 @@ export default function Search() {
             </form>
 
             {formErrors.length > 0 && (
-                <div className="max-w-7xl mx-auto mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                <div className="max-w-5xl mx-auto mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
                     <ul className="list-disc list-inside space-y-1 text-sm">
                         {formErrors.map((error, index) => (
                             <li key={index}>{error}</li>
