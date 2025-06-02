@@ -2,7 +2,6 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ProductService } from "../../../services/productService.js";
 import Search from "../../../components/layouts/search.jsx";
-import Breadcrumb from "../../../components/layouts/breadcrumb.jsx";
 import ProductCarousel from "../../../components/layouts/productCarousel.jsx";
 import {getProductSlug, ProductEnum} from "../../../enums/ProductEnum.js";
 
@@ -61,8 +60,11 @@ export default function Offers() {
     return (
         <>
             <Search />
-            <Breadcrumb />
-            <h1 className="text-xl font-bold mb-2">Résultats</h1>
+            <div className="ml-4 hidden lg:flex lg:flex-1 lg:justify-start">
+                <a href="/#product" className="text-sm font-semibold text-gray-900">
+                    <span aria-hidden="true">&larr;</span> Retour
+                </a>
+            </div>
             {state?.product === ProductEnum.HOTEL && (
                 <ProductCarousel products={offers} slug={ getProductSlug(state?.product) } startDate={state?.startDate} endDate={state?.endDate}/>
             )}

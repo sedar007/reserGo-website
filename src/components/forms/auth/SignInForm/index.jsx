@@ -34,7 +34,6 @@ const SignInForm = () => {
             try {
                 await auth.loginUser(login, password);
                 setError(null);
-
                 console.log(from)
                 // navigate('/');
                 // navigate(from, { replace: true });

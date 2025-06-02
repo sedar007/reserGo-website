@@ -69,11 +69,17 @@ export default function Rooms() {
     return (
         <>
             <div className="bg-white">
+                <div className="ml-8 mt-12 hidden lg:flex lg:flex-1 lg:justify-start">
+                    <a href="/" className="text-sm font-semibold text-gray-900">
+                        <span aria-hidden="true">&larr;</span> Revenir à la page d'accueil
+                    </a>
+                </div>
                 <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+
                     <div className="flex justify-end mb-6">
                         <button
                             onClick={() => setOpen(true)}
-                            className="rounded-md bg-indigo-600 px-4 py-2 text-white font-medium hover:bg-indigo-700"
+                            className="rounded-md bg-[#d56a34] px-4 py-2 text-white font-medium hover:bg-[#d56a34]"
                         >
                             Voir le panier
                         </button>
@@ -110,7 +116,7 @@ export default function Rooms() {
                                 <button
                                     onClick={() => addToCart(room, numberOfGuests[room.id] || 1)}
                                     className={`mt-2 w-full rounded-md px-4 py-2 text-sm font-medium 
-                                        ${numberOfGuests[room.id] >= room.capacity ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                                        ${numberOfGuests[room.id] >= room.capacity ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#d56a34] text-white hover:bg-[#d56a34]'}`}
                                     disabled={numberOfGuests[room.id] >= room.capacity}
                                 >
                                     Ajouter au panier
@@ -210,7 +216,7 @@ export default function Rooms() {
                                                     {cartItems.length > 0 && (
                                                         <button
                                                             type="button"
-                                                            className="text-indigo-600 hover:text-indigo-500"
+                                                            className="text-[#d56a34] hover:text-[#d56a34]"
                                                             onClick={handleContinuePayement}
                                                         >
                                                             Procéder au paiement &rarr;

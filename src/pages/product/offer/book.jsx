@@ -133,6 +133,11 @@ export default function ProductOfferBook() {
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="hidden lg:flex lg:flex-1 lg:justify-start">
+                <a href="/" className="text-sm font-semibold text-gray-900">
+                    <span aria-hidden="true">&larr;</span> Annuler et revenir à la page d'accueil
+                </a>
+            </div>
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
                 <img
                     src={ slug === "hotels" ? state.hotelData.imageSrc : state.data.imageSrc}
@@ -165,7 +170,7 @@ export default function ProductOfferBook() {
                     {slug === "events" && (
                         <>
                             <p className="mt-2 text-gray-600">{state.data.availableCapacity} place(s) choisie(s) pour {getNbDays()} jour(s) </p>
-                            <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                            <p className="mt-4 text-2xl text-[#d56a34] font-semibold">
                                 {state.data.pricePerDay} € / jour
                             </p>
                         </>
@@ -175,7 +180,7 @@ export default function ProductOfferBook() {
                         <>
                             <p className="mt-2 text-gray-600">{state.data.typeOfCuisine} | {state.data.availableCapacity} place(s) disponible(s)</p>
                             <p className="mt-2 text-gray-600">{state.numberOfGuests} place(s) choisie(s)</p>
-                            <p className="mt-4 text-2xl text-indigo-600 font-semibold">
+                            <p className="mt-4 text-2xl text-[#d56a34] font-semibold">
                                 {state.data.pricePerGuest} € / personne
                             </p>
                         </>
@@ -195,9 +200,9 @@ export default function ProductOfferBook() {
                                     <Radio
                                         key={method.value}
                                         value={method.value}
-                                        className="flex items-center gap-3 rounded-md border p-3 cursor-pointer data-checked:border-indigo-600 data-checked:ring-2 data-checked:ring-indigo-500"
+                                        className="flex items-center gap-3 rounded-md border p-3 cursor-pointer data-checked:border-[#d56a34] data-checked:ring-2 data-checked:ring-[#d56a34]"
                                     >
-                                        <method.icon className="h-5 w-5 text-indigo-500" />
+                                        <method.icon className="h-5 w-5 text-[#d56a34]" />
                                         <span>{method.name}</span>
                                     </Radio>
                                 ))}
@@ -298,7 +303,7 @@ export default function ProductOfferBook() {
                         <button
                             type="submit"
                             onClick={openModal}
-                            className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 font-medium"
+                            className="w-full rounded-md bg-[#d56a34] px-4 py-2 text-white hover:bg-[#d56a34] font-medium"
                         >
                             Payer au total { slug === "hotels" ? state.total : getTotalToPay() } €
                         </button>
