@@ -7,12 +7,14 @@ import Offers from "./pages/product/offers/index.jsx";
 import ProductOfferView from "./pages/product/offer/view.jsx";
 import ProductOfferBook from "./pages/product/offer/book.jsx";
 import Rooms from "./pages/product/offer/rooms.jsx";
+import MyBooking from "./pages/myBooking/index.jsx";
 
 export default function App() {
     return (
         <Routes>
             <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
+                <Route path="/my-booking" element={<MyBooking />} />
             </Route>
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />

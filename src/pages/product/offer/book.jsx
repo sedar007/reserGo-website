@@ -11,6 +11,7 @@ import logoMir from "../../../assets/mir.svg";
 import {generateRating} from "../../../utils/faker/ratingFaker.js";
 import ConfirmationModal from "../../../components/modals/confirmationModal.jsx";
 import {ProductService} from "../../../services/productService.js";
+import {AuthService} from "../../../services/authServices.jsx";
 
 const paymentMethods = [
     { name: 'Carte bancaire', value: 'card', icon: CreditCardIcon },
@@ -27,14 +28,20 @@ export default function ProductOfferBook() {
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const navigate = useNavigate();
     const slug = state.slug;
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    useEffect(() => {
+        const checkAuth = async () => {
+            const auth = await new AuthService().isAuthenticated();
+            if (!auth) {
+                console.log(state)
+                // navigate("/sign-in", {state: {from: state.pathname}, replace: true});
+            } else {
+                setIsAuthenticated(true);
+            }
+        };
+        checkAuth();
+    }, [navigate, state]);
 
     useEffect(() => {
         if (selectedMethod === 'card') {
@@ -43,6 +50,18 @@ export default function ProductOfferBook() {
             setFakePaypal(generateFakePaypalDetails());
         }
     }, [selectedMethod]);
+
+    if (!isAuthenticated) {
+        return null;
+    }
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     const handleConfirmPayment = async () => {
         setPaymentSuccess(true);
@@ -82,8 +101,7 @@ export default function ProductOfferBook() {
                 default:
                     break;
             }
-
-            console.log(await productService.createBooking(slug, params));
+            await productService.createBooking(slug, params);
 
         } catch (err) {
             console.error('Error while fetching data', err);
