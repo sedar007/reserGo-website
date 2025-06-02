@@ -27,10 +27,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
         scrollRef.current?.scrollBy({ left: 400, behavior: "smooth" });
     };
 
-    const handleViewDetails = (product, id) => {
-        navigate(`/${product}/offer/${id}`);
-    };
-
     const handleBook = (product, id, data, startDate, endDate, date, image) => {
         switch (product) {
             case "hotels":
@@ -124,12 +120,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                             <div className="mt-4 flex justify-between">
                                 <button
                                     className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                    onClick={() => handleViewDetails(slug, product.data.hotelId)}
-                                >
-                                    Voir détail
-                                </button>
-                                <button
-                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
                                     onClick={() => handleBook(slug, product.data.hotelId, product.data, startDate, endDate, product.data.imageSrc)}
                                 >
                                     Réserver
@@ -190,12 +180,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                             <div className="mt-4 flex justify-between">
                                 <button
                                     className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                    onClick={() => handleViewDetails(slug, product.data.restaurantOfferId)}
-                                >
-                                    Voir détail
-                                </button>
-                                <button
-                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
                                     onClick={() => handleBook(slug, product.data.restaurantOfferId, product.data, null, null, date)}
                                 >
                                     Réserver
@@ -254,12 +238,6 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
                                 </p>
                             </div>
                             <div className="mt-4 flex justify-between">
-                                <button
-                                    className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
-                                    onClick={() => handleViewDetails(slug, product.data.eventOfferId)}
-                                >
-                                    Voir détail
-                                </button>
                                 <button
                                     className="inline-block px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200"
                                     onClick={() => handleBook(slug, product.data.eventOfferId, product.data, startDate, endDate, product.data.imageSrc)}

@@ -92,6 +92,7 @@ export default function Search() {
                 </div>
 
                 <div className="flex flex-col gap-2 w-full sm:w-auto">
+                    <label className="text-sm font-medium text-gray-800">Nombre de personnes</label>
                     <input
                         type="number"
                         min="1"
