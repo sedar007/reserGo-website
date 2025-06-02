@@ -28,13 +28,8 @@ export default function Search() {
         e.preventDefault();
         const errors = [];
 
-        if (!product) {
-            errors.push("Le produit est obligatoire.");
-        }
-
-        if (adults < 1) {
-            errors.push("Le nombre de personnes doit être au moins de 1.");
-        }
+        if (!product) errors.push("Le produit est obligatoire.");
+        if (adults < 1) errors.push("Le nombre de personnes doit être au moins de 1.");
 
         switch (product) {
             case ProductEnum.HOTEL:
@@ -79,9 +74,9 @@ export default function Search() {
         <>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-5xl mx-auto p-6 bg-white rounded-3xl shadow-xl flex items-center space-x-6"
+                className="max-w-5xl mx-auto p-6 bg-white rounded-3xl shadow-xl flex flex-wrap gap-4 sm:gap-6 items-end justify-between"
             >
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
                     <label htmlFor="product" className="text-sm font-medium text-gray-800">Produit</label>
                     <select
                         id="product"
@@ -96,35 +91,35 @@ export default function Search() {
                     </select>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="adults" className="text-sm font-medium text-gray-800">Nombre de personnes</label>
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
                     <input
                         type="number"
                         min="1"
                         value={adults}
                         onChange={(e) => setAdults(parseInt(e.target.value))}
-                        className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                        className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                     />
+
                 </div>
 
                 {product === ProductEnum.HOTEL && (
                     <>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Arrivée</label>
                             <input
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Départ</label>
                             <input
                                 type="date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
@@ -132,23 +127,23 @@ export default function Search() {
 
                 {product === ProductEnum.RESTAURANT && (
                     <>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Date</label>
                             <input
                                 type="date"
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Type de cuisine</label>
                             <input
                                 type="text"
                                 placeholder="Italienne, Française, etc."
                                 value={cuisine}
                                 onChange={(e) => setCuisine(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
@@ -156,31 +151,31 @@ export default function Search() {
 
                 {product === ProductEnum.EVENT && (
                     <>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Début</label>
                             <input
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto">
                             <label className="text-sm font-medium text-gray-800">Fin</label>
                             <input
                                 type="date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="rounded-lg border border-gray-300 focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
+                                className="rounded-lg border border-gray-300 focus:outline-none focus:ring-[#d56a34] focus:border-[#d56a34] text-sm p-2"
                             />
                         </div>
                     </>
                 )}
 
-                <div className="flex flex-col justify-center mt-4">
+                <div className="flex flex-col justify-center mt-4 w-full sm:w-auto">
                     <button
                         type="submit"
-                        className="w-full px-6 py-3 rounded-lg bg-[#d56a34] text-white font-semibold shadow-md hover:bg-[#c25d2f] transition"
+                        className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#d56a34] text-white font-semibold shadow-md hover:bg-[#c25d2f] transition"
                     >
                         Rechercher
                     </button>
