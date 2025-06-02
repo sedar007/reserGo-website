@@ -12,7 +12,7 @@ export class ProductService {
     async getAllOffers(slug, params) {
         try{
             if(slug === "hotels") {
-                const url = `/administration/${slug}/search-availability?${params.toString()}`;
+                const url = `/customer/${slug}/search-availability?${params.toString()}`;
                 const response = await api.get(url);
                 return response.data;
             }
