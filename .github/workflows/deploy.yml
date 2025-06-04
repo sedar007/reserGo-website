@@ -1,0 +1,118 @@
+name: Update and deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: 'Type de version (par exemple, major, minor, patch, build)'
+        required: true
+        default: 'build'
+        type: choice
+        options:
+          - 'major'
+          - 'minor'
+          - 'patch'
+          - 'build'
+
+permissions:
+  contents: write  # Nécessaire pour créer des releases
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: refs/heads/develop
+          token: ${{ secrets.GIT_TOKEN_ADMIN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Change Version
+        id: change_version
+        run: |
+          chmod +x ./version-change.sh
+          $(./version-change.sh "${{ github.event.inputs.commit_message }}")
+
+      - name: Get Version from package.json
+        id: get_version
+        run: |
+          new_version=$(jq -r '.version' package.json)
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Determine Commit Message
+        id: commit_message
+        run: |
+          if [ -z "${{ github.event.inputs.commit_message }}" ]; then
+            echo "COMMIT_MESSAGE=Bump version to ${{ env.new_version }} - Automated release" >> $GITHUB_ENV
+          else
+            echo "COMMIT_MESSAGE=${{ github.event.inputs.commit_message }}" >> $GITHUB_ENV
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+      - name: Commit New Version
+        run: |
+          git add package.json
+          git add version-change.sh
+          git commit -m "${{ env.COMMIT_MESSAGE }} - Version ${{ env.new_version }}"
+
+      - name: Push changes to Develop
+        run: |
+          git push origin develop
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN_ADMIN }}
+
+      - name: Merge Develop into Main
+        run: |
+          git checkout main
+          git merge develop --no-ff -m "Merge develop into main - version ${{ env.new_version }}"
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN_ADMIN }}
+
+      - name: Push changes to Main
+        run: |
+          git push origin main
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN_ADMIN }}
+
+      - name: Create Git Tag
+        run: |
+          git tag -a "v${{ env.new_version }}" -m "${{ env.new_version }}"
+          git push origin "v${{ env.new_version }}"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN_ADMIN }}
+          tag_name: "v${{ env.new_version }}"
+          name: "v${{ env.new_version }}"
+          draft: false
+          prerelease: false
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run build
+        run: npm run build
+
+      - name: Create Archive of Build
+        run: |
+          zip -r "dist-${{ env.new_version }}.zip" dist
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN_ADMIN }}
+          tag_name: "v${{ env.new_version }}"
+          files: "dist-${{ env.new_version }}.zip"
