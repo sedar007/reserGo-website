@@ -116,8 +116,8 @@ export default function Rooms() {
                                 <button
                                     onClick={() => addToCart(room, numberOfGuests[room.id] || 1)}
                                     className={`mt-2 w-full rounded-md px-4 py-2 text-sm font-medium 
-                                        ${numberOfGuests[room.id] >= room.capacity ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#d56a34] text-white hover:bg-[#d56a34]'}`}
-                                    disabled={numberOfGuests[room.id] >= room.capacity}
+                                        ${numberOfGuests[room.id] > room.capacity ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#d56a34] text-white hover:bg-[#d56a34]'}`}
+                                    disabled={numberOfGuests[room.id] > room.capacity}
                                 >
                                     Ajouter au panier
                                 </button>
