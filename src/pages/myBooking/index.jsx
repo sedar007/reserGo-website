@@ -30,15 +30,19 @@ export default function MyBooking() {
     }, []);
 
     if(!auth.isAuthenticated)
-        return <div className="max-w-md mx-auto mt-10 p-5 bg-yellow-100 text-yellow-800 rounded-xl border border-yellow-300 flex items-start gap-3">
-            <LockClosedIcon className="w-6 h-6 mt-1" />
+        return <div className="min-h-[60vh] max-w-md mx-auto mt-10 p-5 flex items-start gap-3 pb-32">
+        <div
+            className="max-w-md mx-auto mt-10 p-5 bg-yellow-100 text-yellow-800 rounded-xl border border-yellow-300 flex items-start gap-3">
+            <LockClosedIcon className="w-6 h-6 mt-1"/>
             <p>Veuillez vous connecter pour voir les informations de vos réservations.</p>
-        </div>;
+        </div>
+    </div>
+        ;
 
-    if (error)
+        if (error)
         return <div className="text-center py-20">
-            <h2 className="text-2xl font-semibold text-gray-700">
-                Une erreur est survenue ...
+        <h2 className="text-2xl font-semibold text-gray-700">
+            Une erreur est survenue ...
             </h2>
             <p className="text-gray-500 mt-2">
                 Veuillez contacter un administrateur.
