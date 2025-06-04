@@ -1,4 +1,4 @@
-# ReserGo Frontend
+# ReserGo Website
 
 ReserGo est le site destiné aux clients, leur permettant de rechercher des disponibilités, de se connecter pour effectuer des réservations et de consulter la liste de leurs réservations. Ce frontend est développé en **React** et communique avec un backend en .NET via une API.
 ## Fonctionnalités principales
