@@ -1,5 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+import {useRef, useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
+import {AuthContext} from "../../context/authContext.jsx";
 
 export default function ProductCarousel({ products, slug, startDate, endDate, date}) {
     const scrollRef = useRef();
@@ -7,6 +8,23 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
     const [atStart, setAtStart] = useState(true);
     const [atEnd, setAtEnd] = useState(false);
     const [numberOfGuests, setNumberOfGuests] = useState({});
+
+    const authContext = useContext(AuthContext);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const timeout = setTimeout(() => {
+            updateArrows();
+        }, 100);
+
+        el.addEventListener("scroll", updateArrows);
+        return () => {
+            clearTimeout(timeout);
+            el.removeEventListener("scroll", updateArrows);
+        };
+    }, [products]);
 
     const updateArrows = () => {
         const el = scrollRef.current;
@@ -28,35 +46,59 @@ export default function ProductCarousel({ products, slug, startDate, endDate, da
     };
 
     const handleBook = (product, id, data, startDate, endDate, date, image) => {
+        if (!authContext?.isAuthenticated) {
+            const path = (() => {
+                switch (product) {
+                    case "hotels":
+                        return `/${product}/offer/rooms/${id}`;
+                    case "restaurants":
+                        return `/${product}/offer/book/${id}`;
+                    case "events":
+                        return `/${product}/offer/book/${id}`;
+                    default:
+                        return "/";
+                }
+            })();
+
+            const state = {
+                data,
+                startDate,
+                endDate,
+                date,
+                slug,
+                image,
+                id,
+                numberOfGuests: numberOfGuests[id] || 1,
+            };
+
+            // Redirection vers login avec info sur la route d'origine
+            navigate("/sign-in", {
+                state: {
+                    redirectTo: path,
+                    redirectState: state,
+                },
+            });
+            return;
+        }
+
+        // Redirection normale si connecté
         switch (product) {
             case "hotels":
                 navigate(`/${product}/offer/rooms/${id}`, { state: { data, startDate, endDate, slug, image } });
                 break;
             case "restaurants":
                 navigate(`/${product}/offer/book/${id}`, { state: { data, date, slug, id, numberOfGuests: numberOfGuests[id] || 1 } });
-                break
+                break;
             case "events":
                 navigate(`/${product}/offer/book/${id}`, { state: { data, startDate, endDate, slug, id } });
-                break
+                break;
             default:
                 break;
         }
     };
 
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
 
-        const timeout = setTimeout(() => {
-            updateArrows();
-        }, 100);
 
-        el.addEventListener("scroll", updateArrows);
-        return () => {
-            clearTimeout(timeout);
-            el.removeEventListener("scroll", updateArrows);
-        };
-    }, [products]);
 
     if (!products || products.length === 0) {
         return (

@@ -19,7 +19,7 @@ const SignInForm = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const from = location.from || "/";
+   /* const from = location.from || "/";
 
     useEffect(() => {
         if (auth?.username ) {
@@ -42,6 +42,30 @@ const SignInForm = () => {
             } finally {
                 setLoading(false);
             }
+    }; */
+
+    const redirectTo = location.state?.redirectTo || "/";
+    const redirectState = location.state?.redirectState || null;
+
+    useEffect(() => {
+        if (auth?.username) {
+            // Si déjà connecté, redirige vers la page souhaitée
+            navigate(redirectTo, { state: redirectState });
+        }
+    }, [auth?.username]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await auth.loginUser(login, password);
+            setError(null);
+            navigate(redirectTo, { state: redirectState });
+        } catch (err) {
+            setError('Identifiants incorrects');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
