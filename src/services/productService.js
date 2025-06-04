@@ -1,41 +1,23 @@
-// import api from './api';
-
-import {ProductEnum} from "../enums/ProductEnum.js";
-import {HotelOfferFixture} from "../fixtures/offer/hotelOfferFixture.js";
-import {EventOfferFixture} from "../fixtures/offer/eventOfferFixture.js";
-import {RestaurantOfferFixture} from "../fixtures/offer/restaurantOfferFixture.js";
 import api from "./api.js";
 
-const BASE_URL = '/administration/offers';
+const BASE_URL = '/customer/booking';
 
 export class ProductService {
     async getAllOffers(slug, params) {
         try{
-            if(slug === "hotels") {
-                const url = `/customer/${slug}/search-availability?${params.toString()}`;
-                const response = await api.get(url);
-                return response.data;
-            }
-            if(slug === "restaurants") {
-                const url = `/customer/booking/${slug}/search-availability?${params.toString()}`;
-                const response = await api.get(url);
-                return response.data;
-            }
-            if(slug === "events") {
-                const url = `/customer/booking/${slug}/search-availability?${params.toString()}`;
-                const response = await api.get(url);
-                return response.data;
-            }
+            const url = `${BASE_URL}/${slug}/search-availability?${params.toString()}`;
+            const response = await api.get(url);
+            return response.data;
         }
         catch (error) {
-            console.error('Error fetching product info', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }
 
     async createBooking(slug, params) {
         try {
-            const url = `/customer/booking/${slug}`;
+            const url = `${BASE_URL}/${slug}`;
             const response = await api.post(url, params, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,18 +25,18 @@ export class ProductService {
             });
             return response.data;
         } catch (error) {
-            console.error('Error creating booking', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }
 
     async getAllBooking() {
         try {
-            const url = `/customer/booking/my-bookings`;
+            const url = `${BASE_URL}/my-bookings`;
             const response = await api.get(url);
             return response.data;
         } catch (error) {
-            console.error('Error retrieving all bookings', error);
+            if(error.status === 500) throw new Error('Erreur serveur');
             throw error;
         }
     }

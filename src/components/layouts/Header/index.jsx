@@ -126,7 +126,7 @@ export default function Header() {
                         </PopoverPanel>
                     </Popover>
                     <a href="/" className="text-sm/6 font-semibold text-gray-900">
-                        Acceuil
+                        Accueil
                     </a>
                     <a href="/my-booking" className="text-sm/6 font-semibold text-gray-900">
                         Mes réservations
@@ -202,7 +202,7 @@ export default function Header() {
                                     href="/"
                                     className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                                 >
-                                    Acceuil
+                                    Accueil
                                 </a>
                                 <a
                                     href="/my-booking"
